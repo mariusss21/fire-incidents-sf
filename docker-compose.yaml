@@ -400,9 +400,11 @@ services:
     environment:
       - GITSYNC_REPO=https://github.com/mariusss21/fire-incidents-sf.git
       - GITSYNC_BRANCH=main
-      - GITSYNC_SUBPATH=dags 
-      - GITSYNC_ROOT=/opt/airflow/dags 
-      - GITSYNC_DEST="" 
+      - GITSYNC_SUBPATH=dags
+      - GITSYNC_ROOT=/opt/airflow/dags
+      - GITSYNC_INCLUDE='*.py'
+      - GITSYNC_EXCLUDE='**/.git/**,**/.worktrees/**'
+      - GITSYNC_DEST=/opt/airflow/dags
       - GITSYNC_WAIT=15 
       - GITSYNC_ONE_TIME=false 
       - GITSYNC_PERMISSIONS=0777 

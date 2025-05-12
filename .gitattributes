@@ -1,0 +1,2 @@
+dags/.git export-ignore
+dags/.worktrees export-ignore

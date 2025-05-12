@@ -1,3 +1,7 @@
-# Ignore git-sync internal directories
+# Ignore git-related directories
 .git
+.git/
+.git/**
 .worktrees
+.worktrees/
+.worktrees/**
