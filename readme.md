@@ -27,6 +27,7 @@ For this challenge, an open-source stack was chosen to facilitate local developm
     *   `psycopg2` and `SQLAlchemy` for PostgreSQL interaction.
 *   **Containerization:** Docker and Docker Compose manage the services, ensuring a consistent environment.
 
+![image](open_source_architecture.png)
 
 ### 2.2. Proposed AWS Cloud Architecture (Scalable Alternative)
 
