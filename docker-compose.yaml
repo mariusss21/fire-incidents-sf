@@ -396,16 +396,17 @@ services:
       - airflow-network
 
   git-sync:
-    image: registry.k8s.io/git-sync/git-sync:v4.2.6 
+    image: registry.k8s.io/git-sync/git-sync:v4.0.0
     environment:
-      - GIT_SYNC_REPO=https://github.com/mariusss21/fire-incidents-sf.git
-      - GIT_SYNC_BRANCH=main
-      - GIT_SYNC_SUBPATH=dags 
-      - GIT_SYNC_ROOT=/opt/airflow/dags 
-      - GIT_SYNC_DEST="" 
-      - GIT_SYNC_WAIT=60 
-      - GIT_SYNC_ONE_TIME=false 
-      - GIT_SYNC_PERMISSIONS=0755 
+      - GITSYNC_REPO=https://github.com/mariusss21/fire-incidents-sf.git
+      - GITSYNC_BRANCH=main
+      - GITSYNC_SUBPATH=dags 
+      - GITSYNC_ROOT=/opt/airflow/dags 
+      - GITSYNC_DEST="" 
+      - GITSYNC_WAIT=15 
+      - GITSYNC_ONE_TIME=false 
+      - GITSYNC_PERMISSIONS=0777 
+    user: "0:0" # Run git-sync as root to allow writing to the volume
     volumes:
       - dags-volume:/opt/airflow/dags 
     restart: always

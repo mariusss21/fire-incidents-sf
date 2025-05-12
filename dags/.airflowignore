@@ -1,0 +1,3 @@
+# Ignore git-sync internal directories
+.git
+.worktrees
