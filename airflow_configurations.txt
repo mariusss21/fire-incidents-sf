@@ -1,0 +1,38 @@
+1. Create Airflow Connections:
+
+Go to Admin -> Connections.
+
+Click the + button to add a new connection.
+
+MinIO Connection:
+
+Conn Id: minio_default
+Conn Type: S3
+AWS Access Key ID: minioadmin
+AWS Secret Access Key: minioadmin
+Extra: {"endpoint_url": "http://minio:9000"}
+Note: The endpoint_url must use the Docker service name minio and port 9000 for communication within the Docker network.
+PostgreSQL Data Warehouse Connection:
+
+Conn Id: postgres_dw
+Conn Type: Postgres
+Host: postgres-data (this is the service name from your docker-compose.yaml)
+Schema (Database): data_db
+Login: data_user
+Password: data_password
+Port: 5432
+2. Create Airflow Variables:
+
+Go to Admin -> Variables.
+
+Click the + button to add new variables.
+
+Variable 1:
+Key: fire_incidents_bucket_name
+Val: fire-incidents
+Variable 2:
+Key: fire_incidents_raw_folder
+Val: raw
+Variable 3:
+Key: fire_incidents_processed_folder
+Val: processed
