@@ -301,5 +301,3 @@ LIMIT 5;
 *   **Advanced Data Modeling:** For a production-scale DWH, especially in Redshift, implement a proper dimensional model (e.g., star or snowflake schema) to optimize analytical query performance.
 *   **CI/CD Pipeline:** Set up a Continuous Integration/Continuous Delivery pipeline (e.g., using GitHub Actions) for automated linting, testing, and deployment of DAGs and infrastructure changes.
 *   **Parameterization:** Further parameterize DAGs (e.g., for date ranges if backfilling becomes a requirement).
-
-```
