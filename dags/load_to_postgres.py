@@ -4,6 +4,7 @@ from minio_utils import read_from_minio, write_to_minio
 import os
 from io import BytesIO
 from airflow.providers.postgres.hooks.postgres import PostgresHook
+from sql_queries import create_processed_table, create_postgis_extension, drop_processed_table
 
 def convert_csv_to_parquet_with_schema(
     df: pd.DataFrame,
@@ -98,85 +99,15 @@ def create_database_and_table(postgres_conn_id: str = "postgres_dw"):
     
     try:
         # Drop table if it exists
-        cursor.execute("DROP TABLE IF EXISTS fire_incidents")
+        cursor.execute(drop_processed_table)
         print("Existing table dropped if it existed")
         
         print("Attempting to enable PostGIS extension...")
-        cursor.execute("CREATE EXTENSION IF NOT EXISTS postgis;")
+        cursor.execute(create_postgis_extension)
         print("PostGIS extension enabled or already exists.")
 
         # Create table
-        cursor.execute("""
-            CREATE TABLE fire_incidents (
-                incident_number VARCHAR(50) PRIMARY KEY,
-                exposure_number INTEGER,
-                id VARCHAR(50),
-                address VARCHAR(200),
-                incident_date TIMESTAMP,
-                call_number VARCHAR(50),
-                alarm_dttm TIMESTAMP,
-                arrival_dttm TIMESTAMP,
-                close_dttm TIMESTAMP,
-                city VARCHAR(100),
-                zipcode VARCHAR(20),
-                battalion VARCHAR(50),
-                station_area VARCHAR(50),
-                box VARCHAR(20),
-                suppression_units INTEGER,
-                suppression_personnel INTEGER,
-                ems_units INTEGER,
-                ems_personnel INTEGER,
-                other_units INTEGER,
-                other_personnel INTEGER,
-                first_unit_on_scene VARCHAR(100),
-                estimated_property_loss INTEGER,
-                estimated_contents_loss INTEGER,
-                fire_fatalities INTEGER,
-                fire_injuries INTEGER,
-                civilian_fatalities INTEGER,
-                civilian_injuries INTEGER,
-                number_of_alarms INTEGER,
-                primary_situation VARCHAR(100),
-                mutual_aid VARCHAR(50),
-                action_taken_primary VARCHAR(100),
-                action_taken_secondary VARCHAR(100),
-                action_taken_other VARCHAR(100),
-                detector_alerted_occupants VARCHAR(50),
-                property_use VARCHAR(100),
-                area_of_fire_origin VARCHAR(100),
-                ignition_cause VARCHAR(100),
-                ignition_factor_primary VARCHAR(100),
-                ignition_factor_secondary VARCHAR(100),
-                heat_source VARCHAR(100),
-                item_first_ignited VARCHAR(100),
-                human_factors_associated_with_ignition VARCHAR(100),
-                structure_type VARCHAR(100),
-                structure_status VARCHAR(100),
-                floor_of_fire_origin INTEGER,
-                fire_spread VARCHAR(100),
-                no_flame_spread VARCHAR(50),
-                number_of_floors_with_minimum_damage INTEGER,
-                number_of_floors_with_significant_damage INTEGER,
-                number_of_floors_with_heavy_damage INTEGER,
-                number_of_floors_with_extreme_damage INTEGER,
-                detectors_present VARCHAR(50),
-                detector_type VARCHAR(100),
-                detector_operation VARCHAR(100),
-                detector_effectiveness VARCHAR(100),
-                detector_failure_reason VARCHAR(100),
-                automatic_extinguishing_system_present VARCHAR(50),
-                automatic_extinguishing_system_type VARCHAR(100),
-                automatic_extinguishing_system_performance VARCHAR(100),
-                automatic_extinguishing_system_failure_reason VARCHAR(100),
-                number_of_sprinkler_heads_operating INTEGER,
-                supervisor_district VARCHAR(50),
-                neighborhood_district VARCHAR(100),
-                point GEOMETRY(POINT, 4326),
-                data_as_of TIMESTAMP,
-                data_loaded_at TIMESTAMP
-            )
-        """)
-        print("Table created successfully")
+        cursor.execute(create_processed_table)
         
     except psycopg2.Error as e:
         print(f"Error creating table: {e}")
@@ -210,7 +141,7 @@ def load_parquet_to_postgres(
         engine = hook.get_sqlalchemy_engine()
         
         # Load data into PostgreSQL
-        df.to_sql('fire_incidents', engine, if_exists='replace', index=False)
+        df.to_sql('processed_fire_incidents', engine, if_exists='replace', index=False)
         print(f"Successfully loaded {len(df)} records into PostgreSQL")
         
     except Exception as e:

@@ -1,7 +1,0 @@
-# Ignore git-related directories
-.git
-.git/
-.git/**
-.worktrees
-.worktrees/
-.worktrees/**

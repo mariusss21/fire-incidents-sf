@@ -78,8 +78,7 @@ x-airflow-common:
     # The following line can be used to set a custom config file, stored in the local config folder
     AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
   volumes: 
-    # - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
-    - dags-volume:/opt/airflow/dags
+    - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
     - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
@@ -395,24 +394,6 @@ services:
     networks:
       - airflow-network
 
-  git-sync:
-    image: registry.k8s.io/git-sync/git-sync:v4.0.0
-    environment:
-      - GITSYNC_REPO=https://github.com/mariusss21/fire-incidents-sf.git
-      - GITSYNC_BRANCH=main
-      - GITSYNC_SUBPATH=dags
-      - GITSYNC_ROOT=/opt/airflow/dags
-      - GITSYNC_INCLUDE='*.py'
-      - GITSYNC_EXCLUDE='**/.git/**,**/.worktrees/**'
-      - GITSYNC_DEST=/opt/airflow/dags
-      - GITSYNC_WAIT=15 
-      - GITSYNC_ONE_TIME=false 
-      - GITSYNC_PERMISSIONS=0777 
-    user: "0:0" # Run git-sync as root to allow writing to the volume
-    volumes:
-      - dags-volume:/opt/airflow/dags 
-    restart: always
-
 networks:
   airflow-network:
     driver: bridge
@@ -421,4 +402,3 @@ volumes:
   postgres-db-volume:
   postgres-data-volume:
   minio-data:
-  dags-volume:

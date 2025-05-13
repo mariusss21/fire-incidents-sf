@@ -6,7 +6,7 @@ import os
 from airflow.models import Variable
 
 @dag(
-    dag_id="fire_incidents_etl_minio",
+    dag_id="1_fire_incidents_etl_minio",
     start_date=datetime(2025, 5, 10),
     schedule="@daily",
     catchup=False,
