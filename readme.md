@@ -209,7 +209,7 @@ All PostgreSQL Data Definition Language (DDL) and Data Manipulation Language (DM
 
 2.  **Environment Configuration (Optional):**
     If you are on Linux and encounter file permission issues with Docker volumes, you can set the `AIRFLOW_UID` in a `.env` file:
-    
+    ```bash
     echo "AIRFLOW_UID=$(id -u)" > .env
     ```
 
